@@ -1,5 +1,5 @@
 # mpbinar
 
-<p>mpBinarSiang untuk yang kelas siang</p>
+<p><strong>Senin, 23 September 2019</strong></p>
 
-mpBinarMalem untuk yang kelas malam
+//Note: Kelas Malem & Siang progress materinya sedikit berbeda
