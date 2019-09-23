@@ -1,5 +1,5 @@
 # mpbinar
 
-<p>mpbinar untuk yang kelas siang</p>
+<p>mpBinarSiang untuk yang kelas siang</p>
 
-mpbinarmalem untuk yang kelas malam
+mpBinarMalem untuk yang kelas malam
