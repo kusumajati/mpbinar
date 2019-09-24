@@ -3,6 +3,6 @@ module.exports=(res, success, message, data, token)=>{
         success: success,
         message: message,
         data: data,
-        token: token
+        token:token
     })
 }

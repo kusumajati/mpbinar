@@ -1,6 +1,8 @@
 var User = require('../models/user.model')
 var Response = require('../middlewares/Response')
 var bcrypt = require('bcrypt')
+var jwt = require('jsonwebtoken');
+var secretKey = 'this is a secret'
 
 exports.userCreate = (req, res) => {
     User.findOne({ username: req.body.username })
@@ -125,8 +127,13 @@ exports.userLogin = (req, res) => {
     User.findOne({ username: req.body.username })
         .then(user => {
            var hash = bcrypt.compareSync(req.body.password, user.password);
-           hash ? Response(res, true, "your loggedin", {_id: user._id})
-           : Response(res, false, "wrong password")
+           if(hash){
+            var token = jwt.sign({username:user.username, id:user._id}, secretKey)
+            Response(res, true, "your loggedin", token)
+           } else{
+            Response(res, false, "wrong password")
+
+           }
         })
         .catch(err => {
             Response(res, false, "oops something happened", err)

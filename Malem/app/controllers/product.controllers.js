@@ -58,3 +58,24 @@ exports.productShow = (req, res) => {
     })
 }
 
+exports.productDelete = (req,res)=>{
+    Product.findByIdAndDelete(req.params.id, {useFindAndModify:false})
+    .then(product=>{
+        User.findById(product.user)
+        .then((userFound) => {
+
+            var findIndexProduct = userFound.products.findIndex(found=>String(found)==String(product._id))
+            userFound.products.splice(findIndexProduct, 1)
+            userFound.save()
+                   Response(res,true,"Product Deleted", product)
+
+        })
+        .catch(errUser=>{
+            Response(res,false,"error from handler user", errUser)
+
+        })
+    })
+    .catch(err=>{
+        Response(res,false,"error from handler", err)
+    })
+}

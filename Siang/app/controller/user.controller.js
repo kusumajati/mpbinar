@@ -35,7 +35,8 @@ exports.userCreate = (req, res) => {
 
 exports.userShowAll = (req, res) => {
 
-    User.find({}).then(alluser => {
+    User.find({})
+    .then(alluser => {
         res.json({
             success: true,
             message: "all user is retrieved",
@@ -52,6 +53,10 @@ exports.userShowAll = (req, res) => {
 
 exports.userShow = (req, res) => {
     User.findById(req.params.id)
+    .populate({
+        path:'products',
+        select: ['name', 'price']
+    })
         .then(user => {
             if (user) {
                 res.json({
@@ -140,6 +145,7 @@ exports.userLogin = (req, res) => {
                     username: user.username,
                     id:user._id
                 }, jwt_pass);
+
                 Response(res, true, "your logged in", user._id, token)
             }else{
                 Response(res, false, "wrong password")

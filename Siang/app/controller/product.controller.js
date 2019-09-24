@@ -4,21 +4,25 @@ var Response = require('../middleware/Response')
 
 
 exports.productCreate = (req, res) => {
-    if(req.headers.userid){
-        Product.create({
-            name: req.body.name,
-            price: req.body.price,
-            userId: req.headers.userId
+    Product.create({
+        name: req.body.name,
+        price: req.body.price,
+        user: req.userId
+    })
+        .then(product => {
+            User.findById(req.userId)
+            .then(user=>{
+                user.products.push(product._id)
+                user.products[0]== null? user.products.splice(0,1):null
+                user.save()
+                Response(res, true, "product created", product)
+            }).catch(errUser=>{
+                Response(res, false, "something went wrong", errUser)
+            })
         })
-        .then(product=>{
-            Response(res, true, "product created", product )
-        })
-        .catch(err=>{
+        .catch(err => {
             Response(res, false, "cannot create product", err)
         })
-    }else{
-        Response(res, false, "you have to login")
-    }
 }
 
 exports.productShowAll = (req, res) => {
@@ -28,6 +32,7 @@ exports.productShowAll = (req, res) => {
             message: "products retrieved",
             data: products
         })
+
     }).catch(err => {
         res.json({
             success: false,
@@ -35,10 +40,13 @@ exports.productShowAll = (req, res) => {
             data: err
         })
     })
+
 }
 
 exports.productShow = (req, res) => {
-    Product.findById(req.params.id).then(product => {
+    Product.findById(req.params.id)
+    .populate('user')
+    .then(product => {
         res.json({
             success: true,
             message: "product retrieved",
@@ -54,36 +62,19 @@ exports.productShow = (req, res) => {
 }
 
 exports.productDelete = (req, res) => {
-
-    Product.findByIdAndRemove(req.params.id)
-        .then(product => {
-            if (req.userId == product.userId) {
-                User.findByIdAndUpdate(req.userId, {$pull:{products:{$in:[product._id]}}})
-                .then(()=>{
-                    res.json({
-                        success: true,
-                        message: 'product deleted',
-                        data: product
-                    })
-                }).catch(errUpt=>{
-                    res.json({
-                        success: false,
-                        message: "cannot update user",
-                    })
-                })
-            } else {
-                res.json({
-                    success: false,
-                    message: "cannot delete product",
-                })
-            }
+    Product.findByIdAndRemove(req.params.id, {useFindAndModify:false
+    })
+    .then(product=>{
+        User.findByIdAndUpdate(req.userId, {$pull:{products:{$in:product._id}}})
+        .then(()=>{
+            Response(res,true,"product deleted", product)
         })
-        .catch(err => {
-            res.json({
-                success: false,
-                message: "cannot delete product",
-                data: err
-            })
+        .catch(errUser=>{
+            Response(res,false,"something went wrong from handler User",errUser)
         })
+    })
+    .catch(err=>{
+        Response(res,false,"something went wrong from handler",err)
+    })
 
 }
