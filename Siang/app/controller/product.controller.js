@@ -78,3 +78,15 @@ exports.productDelete = (req, res) => {
     })
 
 }
+
+exports.productUpdate = (req,res)=>{
+    Product.findByIdAndUpdate(req.params.id, {
+        $set: req.body
+    },{new:true})
+    .then(product=>{
+        Response(res, true, "product updated", product)
+    })
+    .catch(err=>{
+        Response(res, false, "error from product update handler", err )
+    })
+}

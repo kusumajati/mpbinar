@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 var User = require('../models/user.model')
 var Response = require('./Response')
 var jwt = require('jsonwebtoken')
@@ -5,7 +7,7 @@ var secretKey = 'this is a secret'
 
 module.exports = (req, res, next)=>{
     if(req.headers.authorization){
-      var decoded =   jwt.verify(req.headers.authorization, secretKey )
+      var decoded =   jwt.verify(req.headers.authorization,  process.env.JWT_SECRET_KEY)
       User.findById(decoded.id)
       .then(user=>{
           if(user){

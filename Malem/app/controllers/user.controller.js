@@ -1,3 +1,4 @@
+require('dotenv').config()
 var User = require('../models/user.model')
 var Response = require('../middlewares/Response')
 var bcrypt = require('bcrypt')
@@ -128,7 +129,7 @@ exports.userLogin = (req, res) => {
         .then(user => {
            var hash = bcrypt.compareSync(req.body.password, user.password);
            if(hash){
-            var token = jwt.sign({username:user.username, id:user._id}, secretKey)
+            var token = jwt.sign({username:user.username, id:user._id}, process.env.JWT_SECRET_KEY)
             Response(res, true, "your loggedin", token)
            } else{
             Response(res, false, "wrong password")

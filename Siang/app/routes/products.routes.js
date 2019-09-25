@@ -1,11 +1,12 @@
 var product = require('../controller/product.controller')
-var Auth = require('../middleware/Auth')
-var ProductAuth = require('../middleware/ProductAuth')
+var Authentication = require('../middleware/Authentication')
+var Authorization = require('../middleware/Authorization')
 
 
 module.exports =(app)=>{
-    app.post('/product', Auth, product.productCreate )
+    app.post('/product', Authentication, product.productCreate )
     app.get('/product', product.productShowAll)
     app.get('/product/:id', product.productShow)
-    app.delete('/product/:id', Auth, ProductAuth, product.productDelete)
+    app.delete('/product/:id', Authentication, Authorization.product, product.productDelete)
+    app.put('/product/:id', Authentication, Authorization.product, product.productUpdate )
 }

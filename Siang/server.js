@@ -15,6 +15,13 @@ app.get('/',(req, res)=>{
 
    
 })
+
+app.post('/request', (req,res)=>{
+    res.send({
+        query: req.query.apaaja
+    })
+})
+
 app.use(bodyParser.json())
 
 //API

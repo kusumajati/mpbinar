@@ -5,6 +5,7 @@ var reviewSchema = new mongoose.Schema({
         type:String, 
         required:true
         }
+
 })
 
 var Review  = mongoose.model('Review', reviewSchema)
