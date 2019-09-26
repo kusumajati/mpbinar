@@ -12,6 +12,7 @@ module.exports = (req, res, next)=>{
       .then(user=>{
           if(user){
               req.userId = user._id
+              req.username = user.username
               next()
           }else{
               Response(res, false, "You have to log in")

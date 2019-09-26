@@ -6,5 +6,5 @@ module.exports =(app)=>{
     app.post('/product/', Authentication, product.productCreate )
     app.get('/product', product.productShowAll)
     app.get('/product/:id', product.productShow)
-    app.delete('/product/:id', Authentication, Authorization.productAuthorization, product.productDelete)
+    app.delete('/product/:id', Authentication, Authorization.Product, product.productDelete)
 }

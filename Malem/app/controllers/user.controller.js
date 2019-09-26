@@ -6,11 +6,7 @@ var jwt = require('jsonwebtoken');
 var secretKey = 'this is a secret'
 
 exports.userCreate = (req, res) => {
-    User.findOne({ username: req.body.username })
-        .then(user => {
-            if (user) {
-                Response(res, false, "username is taken")
-            } else {
+
                 var newUser = new User({
                     username: req.body.username,
                     password: bcrypt.hashSync(req.body.password, 10)
@@ -30,8 +26,8 @@ exports.userCreate = (req, res) => {
                             data: err
                         })
                     })
-            }
-        })
+
+
         .catch(error => {
             Response(res, false, "cannot create user", error)
         })
@@ -106,8 +102,7 @@ exports.userUpdate = (req, res) => {
 }
 exports.userDelete = (req, res) => {
 
-    var id = req.params.id
-    User.findByIdAndDelete(id, { useFindAndModify: false })
+    User.findByIdAndDelete(req.params.id, { useFindAndModify: false })
         .then((deletedUser) => {
             res.json({
                 success: true,
@@ -130,7 +125,7 @@ exports.userLogin = (req, res) => {
            var hash = bcrypt.compareSync(req.body.password, user.password);
            if(hash){
             var token = jwt.sign({username:user.username, id:user._id}, process.env.JWT_SECRET_KEY)
-            Response(res, true, "your loggedin", token)
+            Response(res, true, "your loggedin", {token: token, id:user._id})
            } else{
             Response(res, false, "wrong password")
 

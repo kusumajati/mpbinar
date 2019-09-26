@@ -1,10 +1,11 @@
+require('dotenv').config()
 var express = require('express')
 var app = express()
 var PORT = 4042
 const bodyParser = require('body-parser')
 
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/binar', {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(`mongodb+srv://nino:${process.env.DB_ATLAS_PASS}@cluster0-e7xbg.mongodb.net/test?retryWrites=true&w=majority`, {useNewUrlParser: true, useUnifiedTopology: true});
 
 app.use(bodyParser.json())
 

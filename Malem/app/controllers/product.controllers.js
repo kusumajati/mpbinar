@@ -8,20 +8,20 @@ exports.productCreate = (req, res) => {
         price: req.body.price,
         user: req.userId
     })
-    .then(product=>{
-        User.findById(product.user)
-        .then(userFound=>{
-            userFound.products.push(product)
-            userFound.save()
-            Response(res, true, "product created", product)
+        .then(product => {
+            User.findById(product.user)
+                .then(userFound => {
+                    userFound.products.push(product)
+                    userFound.save()
+                    Response(res, true, "product created", product)
+                })
+                .catch(errUser => {
+                    Response(res, false, "something went wrong User", errUser)
+                })
         })
-        .catch(errUser=>{
-            Response(res,false,"something went wrong User", errUser)
+        .catch(err => {
+            Response(res, false, "something went wrong", err)
         })
-    })
-    .catch(err=>{
-        Response(res,false,"something went wrong", err)
-    })
 }
 
 exports.productShowAll = (req, res) => {
@@ -42,40 +42,40 @@ exports.productShowAll = (req, res) => {
 
 exports.productShow = (req, res) => {
     Product.findById(req.params.id)
-    .populate('user')
-    .then(product => {
-        res.json({
-            success: true,
-            message: "product retrieved",
-            data: product
+        .populate('user')
+        .then(product => {
+            res.json({
+                success: true,
+                message: "product retrieved",
+                data: product
+            })
+        }).catch(err => {
+            res.json({
+                success: false,
+                message: "cannot find product",
+                data: err
+            })
         })
-    }).catch(err => {
-        res.json({
-            success: false,
-            message: "cannot find product",
-            data: err
-        })
-    })
 }
 
-exports.productDelete = (req,res)=>{
-    Product.findByIdAndDelete(req.params.id, {useFindAndModify:false})
-    .then(product=>{
-        User.findById(product.user)
-        .then((userFound) => {
+exports.productDelete = (req, res) => {
+    Product.findByIdAndDelete(req.params.id, { useFindAndModify: false })
+        .then(product => {
+            User.findById(product.user)
+                .then((userFound) => {
 
-            var findIndexProduct = userFound.products.findIndex(found=>String(found)==String(product._id))
-            userFound.products.splice(findIndexProduct, 1)
-            userFound.save()
-                   Response(res,true,"Product Deleted", product)
+                    var findIndexProduct = userFound.products.findIndex(found => String(found) == String(product._id))
+                    userFound.products.splice(findIndexProduct, 1)
+                    userFound.save()
+                    Response(res, true, "Product Deleted", product)
 
+                })
+                .catch(errUser => {
+                    Response(res, false, "error from handler user", errUser)
+
+                })
         })
-        .catch(errUser=>{
-            Response(res,false,"error from handler user", errUser)
-
+        .catch(err => {
+            Response(res, false, "error from handler", err)
         })
-    })
-    .catch(err=>{
-        Response(res,false,"error from handler", err)
-    })
 }

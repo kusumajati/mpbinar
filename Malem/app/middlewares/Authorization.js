@@ -1,7 +1,7 @@
 var Product = require('../models/product.model')
 var Response = require('./Response')
 
-exports.productAuthorization = (req,res,next)=>{
+exports.Product = (req,res,next)=>{
     Product.findById(req.params.id)
     .then(product=>{
 
@@ -15,4 +15,12 @@ exports.productAuthorization = (req,res,next)=>{
     .catch(err=>{
         Response(res,false,"error from Authorization",err)
     })
+}
+
+exports.User = (req,res, next)=>{
+    if(String(req.params.id) == String(req.userId)){
+        next()
+    }else{
+        Response(res, false,"you are not authorized")
+    }
 }

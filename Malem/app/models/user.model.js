@@ -14,7 +14,8 @@ var userSchema = new mongoose.Schema({
         // maxlength: [12, "password maximum length is 12 characters"]
 
     },
-    products:[{type:mongoose.Schema.Types.ObjectId, ref:'Product'}]
+    products:[{type:mongoose.Schema.Types.ObjectId, ref:'Product'}],
+    reviews:[{type:mongoose.Schema.Types.ObjectId, ref:'Review'}]
   });
 
   var User = mongoose.model('User', userSchema);
