@@ -1,8 +1,7 @@
 var review = require('../controller/review.controller')
-
+var Authentication = require('../middleware/Authentication')
 
 module.exports =(app)=>{
-    app.post('/review', review.reviewCreate)
-    app.get('/review', review.reviewShowAll)
-    app.get('/review/:id', review.reviewShow)
+    app.post('/review', Authentication, review.reviewCreate)
+
 }

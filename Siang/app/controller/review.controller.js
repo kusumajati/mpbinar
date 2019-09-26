@@ -1,67 +1,43 @@
 var Review = require('../models/review.model')
 var User = require('../models/user.model')
+var Response = require('../middleware/Response')
+var Product = require('../models/product.model')
 
-exports.reviewCreate = (req,res)=>{
-    Review.create({
-        text: req.body.text
-    }).then(review=>{
-        User.findById(req.body.userId)
-        .then(user=>{
-            user.reviews.push(review._id)
-            user.reviews[0] == null?user.reviews.splice(0,1):null
-            user.save()
-            res.json({
-                success:true,
-                message:"review created",
-                data:review
-            
-            })
-        })
-        .catch(errUser=>{
-            res.json({
-                success:false,
-                message:"'userId' is required in body",
-                data:errUser
-            })
-        })
+exports.reviewCreate = async (req, res) => {
+    //    Review.create({
+    //        text:req.body.text,
+    //        user:req.userId,
+    //        product: req.query.productId
+    //    }).then(review=>{
+    //        User.findByIdAndUpdate(review.user, {$push:{reviews:review._id}},{useFindAndModify:false})
+    //        .then(()=>{
+    //         Product.findByIdAndUpdate(review.product, {$push:{reviews:review._id}},{useFindAndModify:false})
+    //         .then(()=>{
+    //             Response(res, true, "review created", review)
+    //         }).catch(errProduct=>{
+    //             Response(res,false,'error from product handler', errProduct)
+    //         })
+    //        }).catch(errUser=>{
+    //            Response(res,false,"err from user handler", errUser)
+    //        })
+    //    }).catch(err=>{
+    //        Response(res,false, "error from create handler", err)
+    //    })
 
-    }).catch(err=>{
-        res.json({
-            success:false,
-            message:"cannot create review",
-            data:err
+    try {
+        var review = await Review.create({
+            text: req.body.text,
+            user: req.userId,
+            product: req.query.productId
         })
-    })
-}
+        await User.findByIdAndUpdate(review.user, { $push: { reviews: review._id } }, { useFindAndModify: false })
+        await Product.findByIdAndUpdate(review.product, { $push: { reviews: review._id } }, { useFindAndModify: false })
+        
+        Response(res, true, "review created", review)
 
-exports.reviewShowAll =(req,res)=>{
-    Review.find({}).then(reviews=>{
-        res.json({
-            success:true,
-            message:"reviews retrieved",
-            data:reviews
-        })
-    }).catch(err=>{
-        res.json({
-            success:false,
-            message:"cannot find review",
-            data:err
-        })
-    })
-}
+    } catch (err) {
+        Response(res, false, "error from create handler", err)
 
-exports.reviewShow = (req,res)=>{
-    Review.findById(req.params.id).then(review=>{
-        res.json({
-            success:true,
-            message:"review retrieved",
-            data:review
-        })
-    }).catch(err=>{
-        res.json({
-            success:false,
-            message:"cannot find review",
-            data:err
-        })
-    })
+    }
+
 }

@@ -1,15 +1,16 @@
+require('dotenv').config()
 var User = require('../models/user.model')
 const bcrypt = require('bcrypt');
 var Response = require('../middleware/Response')
 var jwt = require('jsonwebtoken');
-var jwt_pass = 'this is a secret..'
+
 
 
 exports.userCreate = (req, res) => {
 
     var newUser = new User({
         username: req.body.username,
-        password: bcrypt.hashSync(req.body.password, 10),
+        password: bcrypt.hashSync(req.body.password, parseInt( process.env.BCRYPT_SALT)),
         email: req.body.email,
         image: req.body.image,
         reviews: [req.body.reviews],
@@ -144,7 +145,7 @@ exports.userLogin = (req, res) => {
                 var token = jwt.sign({
                     username: user.username,
                     id:user._id
-                }, jwt_pass);
+                }, process.env.JWT_PASS);
 
                 Response(res, true, "your logged in", user._id, token)
             }else{

@@ -45,7 +45,10 @@ exports.productShowAll = (req, res) => {
 
 exports.productShow = (req, res) => {
     Product.findById(req.params.id)
-    .populate('user')
+    .populate({
+        path:'user',
+        select:"username"
+    })
     .then(product => {
         res.json({
             success: true,
