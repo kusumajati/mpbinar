@@ -45,3 +45,23 @@ exports.reviewShow = (req, res) => {
         })
     })
 }
+exports.reviewUpdate = async(req,res)=>{
+    try{
+        var review = await Review.findByIdAndUpdate(req.params.id, {$set:req.body}, {new:true})
+        review? Response(res,true,"review updated", review): Response(res,false,"review not found")
+    
+    }catch(err){
+        Response(res,false,"error handler", err)
+    }
+}
+
+exports.reviewDelete = async (req,res)=>{
+    try{
+       var review =  await Review.findByIdAndRemove(req.params.id)
+       await User.findByIdAndUpdate(review.user, {$pull:{reviews:review._id}})
+       await Product.findByIdAndUpdate(review.product, {$pull:{reviews:review._id}})
+       review? Response(res,true,"review deleted", review): Response(res,false,"review not found")
+    }catch(err){
+
+    }
+}

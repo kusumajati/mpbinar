@@ -28,9 +28,7 @@ exports.userCreate = (req, res) => {
                     })
 
 
-        .catch(error => {
-            Response(res, false, "cannot create user", error)
-        })
+
 
 }
 

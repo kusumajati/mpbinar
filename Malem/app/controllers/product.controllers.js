@@ -79,3 +79,13 @@ exports.productDelete = (req, res) => {
             Response(res, false, "error from handler", err)
         })
 }
+
+exports.productUpdate = async (req,res)=>{
+    try{
+      var product =  await Product.findByIdAndUpdate(req.params.id, {$set:req.body}, {new:true})
+       product? Response(res,true,"product updated", product): Response(res,false,"product not found")
+
+    }catch(err){
+        Response(res,false, "err from product handler", err)
+    }
+}

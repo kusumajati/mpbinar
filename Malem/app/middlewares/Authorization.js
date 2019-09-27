@@ -1,5 +1,6 @@
 var Product = require('../models/product.model')
 var Response = require('./Response')
+var Review = require('../models/review.model')
 
 exports.Product = (req,res,next)=>{
     Product.findById(req.params.id)
@@ -22,5 +23,19 @@ exports.User = (req,res, next)=>{
         next()
     }else{
         Response(res, false,"you are not authorized")
+    }
+}
+
+exports.Review = async (req,res,next)=>{
+    try{
+        var review = await Review.findById(req.params.id)
+
+        if(String(review.user) == String(req.userId)){
+            next()
+        }else{
+            Response(res,false,"youre not authorized")
+        }
+    }catch(err){
+        Response(res, false, "error from authorization", err)
     }
 }
