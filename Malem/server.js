@@ -1,7 +1,7 @@
 require('dotenv').config()
 var express = require('express')
 var app = express()
-var PORT = 4042
+var PORT = process.env.PORT || 4042
 const bodyParser = require('body-parser')
 
 var mongoose = require('mongoose');

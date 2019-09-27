@@ -3,7 +3,6 @@ var User = require('../models/user.model')
 var Response = require('../middlewares/Response')
 var bcrypt = require('bcrypt')
 var jwt = require('jsonwebtoken');
-var secretKey = 'this is a secret'
 
 exports.userCreate = (req, res) => {
 
