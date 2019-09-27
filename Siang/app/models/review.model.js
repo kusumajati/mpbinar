@@ -6,7 +6,7 @@ var reviewSchema = new mongoose.Schema({
         required:true
         },
         user:{type:mongoose.Schema.Types.ObjectId, ref:'User'},
-        product:{type:mongoose.Schema.Types.ObjectId, ref:'Product'}
+        product:{type:mongoose.Schema.Types.ObjectId, ref:'Product', required:true}
 
 })
 

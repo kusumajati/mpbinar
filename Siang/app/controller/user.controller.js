@@ -145,9 +145,9 @@ exports.userLogin = (req, res) => {
                 var token = jwt.sign({
                     username: user.username,
                     id:user._id
-                }, process.env.JWT_PASS);
+                }, process.env.JWT_SECRET);
 
-                Response(res, true, "your logged in", user._id, token)
+                Response(res, true, "your logged in", {token:token,userId:user._id})
             }else{
                 Response(res, false, "wrong password")
             }

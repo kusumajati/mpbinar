@@ -1,8 +1,7 @@
-module.exports=(res, success, message, data, token)=>{
+module.exports=(res, success, message, data)=>{
     res.json({
         success: success,
         message: message,
-        data: data,
-        token:token
+        data: data
     })
 }
