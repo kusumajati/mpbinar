@@ -6,7 +6,8 @@ exports.productCreate = (req, res) => {
     Product.create({
         name: req.body.name,
         price: req.body.price,
-        user: req.userId
+        user: req.userId,
+        images:req.body.images
     })
         .then(product => {
             User.findById(product.user)

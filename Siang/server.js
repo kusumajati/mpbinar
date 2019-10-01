@@ -1,4 +1,5 @@
 require('dotenv').config()
+var cors = require('cors')
 var express = require('express')
 var app = express()
 var PORT = process.env.PORT || 3030
@@ -9,6 +10,12 @@ const config_server = process.env.DB_ATLAS_MONGO || process.env.DB_LOCAL_MONGO
 
 const mongoose = require('mongoose');
 mongoose.connect(config_server, {useNewUrlParser: true, useUnifiedTopology: true});
+
+//CORS
+app.use(cors({
+    origin:['http://localhost:3000', 'http://localhost:3001']
+}))
+
 
 app.get('/',(req, res)=>{
     res.send('this is mp-binar-app')

@@ -12,6 +12,7 @@ var productSchema = new mongoose.Schema({
         required:true, 
         min:[1000, "product price minimum is Rp 1,000,-"]
     },
+    images:[],
     user:{type:mongoose.Schema.Types.ObjectId, ref:'User'},
     reviews:[{type:mongoose.Schema.Types.ObjectId, ref:'Review'}]
 })

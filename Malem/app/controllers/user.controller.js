@@ -32,7 +32,7 @@ exports.userCreate = (req, res) => {
 }
 
 exports.userShowAll = (req, res) => {
-    User.find({})
+    User.find().select('-password')
         .then(allUser => {
             res.json({
                 success: true,
